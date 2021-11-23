@@ -1,22 +1,17 @@
-import { NewGravatar, UpdatedGravatar } from '../generated/Gravity/Gravity'
-import { Gravatar } from '../generated/schema'
+import { Record } from '../generated/schema'
+import {Address, BigDecimal, BigInt, ethereum, log} from '@graphprotocol/graph-ts'
+import {Transfer} from "../generated/Gravity/ERC20";
 
-export function handleNewGravatar(event: NewGravatar): void {
-  let gravatar = new Gravatar(event.params.id.toHex())
-  gravatar.owner = event.params.owner
-  gravatar.displayName = event.params.displayName
-  gravatar.imageUrl = event.params.imageUrl
-  gravatar.save()
+
+export function handleTransfer(event: Transfer): void {
+  let record = new Record(event.transaction.hash.toHex())
+  record.block = event.block.number
+  record.from = event.params.from
+  record.to = event.params.to
+  record.timestamp = event.block.timestamp
+  record.save()
 }
 
-export function handleUpdatedGravatar(event: UpdatedGravatar): void {
-  let id = event.params.id.toHex()
-  let gravatar = Gravatar.load(id)
-  if (gravatar == null) {
-    gravatar = new Gravatar(id)
-  }
-  gravatar.owner = event.params.owner
-  gravatar.displayName = event.params.displayName
-  gravatar.imageUrl = event.params.imageUrl
-  gravatar.save()
+export function handleBlock(block: ethereum.Block): void {
+  log.info("current block number is " + block.number.toString(),[])
 }
