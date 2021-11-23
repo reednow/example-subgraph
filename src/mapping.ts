@@ -13,5 +13,5 @@ export function handleTransfer(event: Transfer): void {
 }
 
 export function handleBlock(block: ethereum.Block): void {
-  log.info("current block number is " + block.number.toString(),[])
+  log.warning("current block number is " + block.number.toString(),[])
 }
